@@ -17,7 +17,7 @@ function TaxPage() {
       description="متابعة الالتزامات الضريبية ومواعيد التقديم والدفع."
       actionLabel="إقرار جديد"
       stats={[
-        { label: "مستحق حالياً", value: `${due.toLocaleString()} JOD` },
+        { label: "مستحق حالياً", value: `${due.toLocaleString("en-GB")} JOD` },
         { label: "مقدّم", value: MOCK_TAX.filter((t) => t.status === "filed").length },
         { label: "مفتوح", value: MOCK_TAX.filter((t) => t.status === "open").length },
         { label: "فترات", value: MOCK_TAX.length },
@@ -26,7 +26,7 @@ function TaxPage() {
       rows={MOCK_TAX.map((t) => [
         t.period,
         t.type,
-        `${t.amount.toLocaleString()} JOD`,
+        `${t.amount.toLocaleString("en-GB")} JOD`,
         t.due,
         <StatusBadge
           key={t.id}

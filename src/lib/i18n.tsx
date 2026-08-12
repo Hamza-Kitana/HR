@@ -569,7 +569,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    document.documentElement.lang = lang;
+    document.documentElement.lang = lang === "ar" ? "ar-JO-u-nu-latn" : "en-GB";
     document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
     window.localStorage.setItem(STORAGE_KEY, lang);
   }, [lang]);

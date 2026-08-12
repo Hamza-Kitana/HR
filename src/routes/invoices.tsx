@@ -22,7 +22,7 @@ function InvoicesPage() {
         action={<Button className="rounded-xl bg-brand text-brand-foreground">{t("inv.newInvoice")}</Button>}
       />
       <div className="mb-6 grid gap-4 sm:grid-cols-2">
-        <StatCard label={t("common.total")} value={`${total.toLocaleString()} JOD`} />
+        <StatCard label={t("common.total")} value={`${total.toLocaleString("en-GB")} JOD`} />
         <StatCard label={t("inv.overdue")} value={overdue} />
       </div>
       <DataTable
@@ -30,7 +30,7 @@ function InvoicesPage() {
         rows={MOCK_INVOICES.map((i) => [
           i.number,
           i.client,
-          `${i.amount.toLocaleString()} JOD`,
+          `${i.amount.toLocaleString("en-GB")} JOD`,
           i.dueDate,
           <StatusBadge
             key={i.id}

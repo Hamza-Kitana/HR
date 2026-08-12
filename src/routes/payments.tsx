@@ -17,7 +17,7 @@ function PaymentsPage() {
       description="سجل الدفعات الصادرة والواردة عبر التحويل والبطاقة والرواتب."
       actionLabel="دفعة جديدة"
       stats={[
-        { label: "حجم الدفعات", value: `${total.toLocaleString()} JOD` },
+        { label: "حجم الدفعات", value: `${total.toLocaleString("en-GB")} JOD` },
         { label: "مكتملة", value: MOCK_PAYMENTS.filter((p) => p.status === "completed").length },
         { label: "معلقة", value: MOCK_PAYMENTS.filter((p) => p.status === "pending").length },
         { label: "مجدولة", value: MOCK_PAYMENTS.filter((p) => p.status === "scheduled").length },
@@ -27,7 +27,7 @@ function PaymentsPage() {
         p.ref,
         p.party,
         p.method,
-        `${p.amount.toLocaleString()} JOD`,
+        `${p.amount.toLocaleString("en-GB")} JOD`,
         p.date,
         <StatusBadge
           key={p.id}

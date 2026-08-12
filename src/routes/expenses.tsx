@@ -17,7 +17,7 @@ function ExpensesPage() {
       description="تسجيل واعتماد مصاريف التشغيل والتسويق والتقنية."
       actionLabel="مصروف جديد"
       stats={[
-        { label: "إجمالي المصاريف", value: `${total.toLocaleString()} JOD` },
+        { label: "إجمالي المصاريف", value: `${total.toLocaleString("en-GB")} JOD` },
         { label: "مدفوعة", value: MOCK_EXPENSES.filter((e) => e.status === "paid").length },
         { label: "بانتظار الاعتماد", value: MOCK_EXPENSES.filter((e) => e.status === "pending").length },
         { label: "معتمدة", value: MOCK_EXPENSES.filter((e) => e.status === "approved").length },
@@ -27,7 +27,7 @@ function ExpensesPage() {
         e.title,
         e.category,
         e.vendor,
-        `${e.amount.toLocaleString()} JOD`,
+        `${e.amount.toLocaleString("en-GB")} JOD`,
         e.date,
         <StatusBadge key={e.id} tone={e.status === "paid" ? "success" : e.status === "pending" ? "warning" : "info"}>
           {e.status === "paid" ? "مدفوع" : e.status === "pending" ? "معلق" : "معتمد"}

@@ -89,7 +89,7 @@ function nowIso() {
 function formatWhen(iso: string) {
   try {
     const d = new Date(iso);
-    return d.toLocaleString("ar-JO", {
+    return d.toLocaleString("en-GB", {
       year: "numeric",
       month: "short",
       day: "numeric",

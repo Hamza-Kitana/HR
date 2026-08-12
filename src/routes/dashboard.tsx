@@ -69,17 +69,17 @@ function shiftDays(iso: string, delta: number) {
   return `${y}-${m}-${day}`;
 }
 
-function shortDayLabel(iso: string, lang: "ar" | "en") {
+function shortDayLabel(iso: string, _lang: "ar" | "en") {
   const d = new Date(`${iso}T12:00:00`);
-  return d.toLocaleDateString(lang === "ar" ? "ar-JO" : "en-GB", {
+  return d.toLocaleDateString("en-GB", {
     weekday: "short",
     day: "numeric",
   });
 }
 
-function longDateLabel(iso: string, lang: "ar" | "en") {
+function longDateLabel(iso: string, _lang: "ar" | "en") {
   const d = new Date(`${iso}T12:00:00`);
-  return d.toLocaleDateString(lang === "ar" ? "ar-JO" : "en-GB", {
+  return d.toLocaleDateString("en-GB", {
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -474,7 +474,7 @@ function DashboardPage() {
                     </p>
                   </div>
                   <time className="shrink-0 text-[11px] tabular-nums text-muted-foreground">
-                    {new Date(row.at).toLocaleString(lang === "ar" ? "ar-JO" : "en-GB", {
+                    {new Date(row.at).toLocaleString("en-GB", {
                       month: "short",
                       day: "numeric",
                       hour: "2-digit",

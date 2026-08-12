@@ -18,8 +18,8 @@ function IncomePage() {
       description="تتبع الإيرادات المحصّلة والمتوقعة من العقود والاشتراكات."
       actionLabel="تسجيل دخل"
       stats={[
-        { label: "إجمالي الدخل", value: `${total.toLocaleString()} JOD` },
-        { label: "محصّل", value: `${received.toLocaleString()} JOD` },
+        { label: "إجمالي الدخل", value: `${total.toLocaleString("en-GB")} JOD` },
+        { label: "محصّل", value: `${received.toLocaleString("en-GB")} JOD` },
         { label: "متوقع", value: MOCK_INCOME.filter((i) => i.status === "expected").length },
         { label: "عمليات", value: MOCK_INCOME.length },
       ]}
@@ -27,7 +27,7 @@ function IncomePage() {
       rows={MOCK_INCOME.map((i) => [
         i.title,
         i.source,
-        `${i.amount.toLocaleString()} JOD`,
+        `${i.amount.toLocaleString("en-GB")} JOD`,
         i.date,
         <StatusBadge key={i.id} tone={i.status === "received" ? "success" : "info"}>
           {i.status === "received" ? "محصّل" : "متوقع"}

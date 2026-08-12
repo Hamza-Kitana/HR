@@ -17,8 +17,8 @@ function JournalPage() {
       actionLabel="قيد جديد"
       stats={[
         { label: "عدد القيود", value: MOCK_JOURNAL.length },
-        { label: "إجمالي المدين", value: `${debit.toLocaleString()} JOD` },
-        { label: "إجمالي الدائن", value: `${debit.toLocaleString()} JOD` },
+        { label: "إجمالي المدين", value: `${debit.toLocaleString("en-GB")} JOD` },
+        { label: "إجمالي الدائن", value: `${debit.toLocaleString("en-GB")} JOD` },
         { label: "الحالة", value: "متوازن", hint: "لا فروقات" },
       ]}
       headers={["رقم القيد", "التاريخ", "البيان", "الحسابات", "مدين", "دائن"]}
@@ -27,8 +27,8 @@ function JournalPage() {
         j.date,
         j.description,
         j.account,
-        `${j.debit.toLocaleString()} JOD`,
-        `${j.credit.toLocaleString()} JOD`,
+        `${j.debit.toLocaleString("en-GB")} JOD`,
+        `${j.credit.toLocaleString("en-GB")} JOD`,
       ])}
     />
   );

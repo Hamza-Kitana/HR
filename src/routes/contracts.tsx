@@ -162,7 +162,7 @@ function ContractsPage() {
           current?.endDate || (current ? (lang === "ar" ? "مفتوح" : "Open") : "—"),
           current ? (
             <span key={`${emp.id}-s`} dir="ltr">
-              {current.salary.toLocaleString()} JOD
+              {current.salary.toLocaleString("en-GB")} JOD
             </span>
           ) : (
             "—"
@@ -277,7 +277,7 @@ function ContractViewDialog({
                   {contractStatusLabel(contract.status, lang)}
                 </StatusBadge>
                 <StatusBadge tone="info">{contractTypeLabel(contract.type, lang)}</StatusBadge>
-                <StatusBadge tone="neutral">{contract.salary.toLocaleString()} JOD</StatusBadge>
+                <StatusBadge tone="neutral">{contract.salary.toLocaleString("en-GB")} JOD</StatusBadge>
               </div>
             </div>
           </div>

@@ -155,7 +155,7 @@ function ProfilePage() {
             <Info label={lang === "ar" ? "العنوان" : "Address"} value={me.address} className="sm:col-span-2" />
             <Info
               label={lang === "ar" ? "الراتب" : "Salary"}
-              value={`${me.salary.toLocaleString()} JOD`}
+              value={`${me.salary.toLocaleString("en-GB")} JOD`}
             />
             <Info label={lang === "ar" ? "ملاحظات" : "Notes"} value={me.notes || "—"} />
           </div>
@@ -232,7 +232,7 @@ function ProfilePage() {
                     {contractStatusLabel(myContract.status, lang)}
                   </StatusBadge>
                   <StatusBadge tone="info">{contractTypeLabel(myContract.type, lang)}</StatusBadge>
-                  <StatusBadge tone="neutral">{myContract.salary.toLocaleString()} JOD</StatusBadge>
+                  <StatusBadge tone="neutral">{myContract.salary.toLocaleString("en-GB")} JOD</StatusBadge>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Info label={lang === "ar" ? "عنوان العقد" : "Title"} value={myContract.title} />

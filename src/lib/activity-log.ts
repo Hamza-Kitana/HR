@@ -137,9 +137,9 @@ export function getActivityLogSnapshot() {
   return readEntries();
 }
 
-export function formatActivityWhen(iso: string, lang: "ar" | "en" = "ar") {
+export function formatActivityWhen(iso: string, _lang: "ar" | "en" = "ar") {
   try {
-    return new Date(iso).toLocaleString(lang === "ar" ? "ar-JO" : "en-GB", {
+    return new Date(iso).toLocaleString("en-GB", {
       year: "numeric",
       month: "short",
       day: "numeric",

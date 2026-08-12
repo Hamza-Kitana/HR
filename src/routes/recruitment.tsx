@@ -234,12 +234,12 @@ function RecruitmentPage() {
                 a.phone,
                 `${a.experienceYears} ${lang === "ar" ? "سنة" : "yrs"}`,
                 <span key={`${a.id}-sal`} dir="ltr">
-                  {a.expectedSalary.toLocaleString()} JOD
+                  {a.expectedSalary.toLocaleString("en-GB")} JOD
                 </span>,
                 <StatusBadge key={`${a.id}-st`} tone={stageTone(a.stage)}>
                   {stageLabel(a.stage, lang)}
                 </StatusBadge>,
-                new Date(a.createdAt).toLocaleDateString(lang === "ar" ? "ar-JO" : "en-GB"),
+                new Date(a.createdAt).toLocaleDateString("en-GB"),
                 ...(canManage
                   ? [
                       <div key={`${a.id}-act`} className="flex flex-wrap gap-1.5" data-no-row-click>
@@ -913,7 +913,7 @@ function ApplicationDetailDialog({
                 <StatusBadge tone="neutral">
                   {application.experienceYears} {lang === "ar" ? "سنة خبرة" : "yrs exp"}
                 </StatusBadge>
-                <StatusBadge tone="info">{application.expectedSalary.toLocaleString()} JOD</StatusBadge>
+                <StatusBadge tone="info">{application.expectedSalary.toLocaleString("en-GB")} JOD</StatusBadge>
                 {application.city ? <StatusBadge tone="neutral">{application.city}</StatusBadge> : null}
               </div>
             </div>
@@ -1080,7 +1080,7 @@ function ApplicationDetailDialog({
                       />
                       <Info
                         label={lang === "ar" ? "الراتب المتوقع" : "Expected salary"}
-                        value={`${application.expectedSalary.toLocaleString()} JOD`}
+                        value={`${application.expectedSalary.toLocaleString("en-GB")} JOD`}
                       />
                       <Info label={lang === "ar" ? "المهارات" : "Skills"} value={application.skills || "—"} className="sm:col-span-2" />
                       <Info
@@ -1103,7 +1103,7 @@ function ApplicationDetailDialog({
                       <Info label={lang === "ar" ? "المسؤول" : "Owner"} value={opening?.owner ?? "—"} />
                       <Info
                         label={lang === "ar" ? "تاريخ الطلب" : "Applied at"}
-                        value={new Date(application.createdAt).toLocaleString(lang === "ar" ? "ar-JO" : "en-GB")}
+                        value={new Date(application.createdAt).toLocaleString("en-GB")}
                       />
                       <Info label={lang === "ar" ? "وصف الشاغر" : "Opening description"} value={opening?.description || "—"} className="sm:col-span-2" />
                     </div>

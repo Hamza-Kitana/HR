@@ -54,11 +54,11 @@ export function currentPayrollMonth() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
 
-export function formatPayrollMonth(month: string, lang: "ar" | "en" = "ar") {
+export function formatPayrollMonth(month: string, _lang: "ar" | "en" = "ar") {
   try {
     const [y, m] = month.split("-").map(Number);
     if (!y || !m) return month;
-    return new Date(y, m - 1, 1).toLocaleDateString(lang === "ar" ? "ar-JO" : "en-GB", {
+    return new Date(y, m - 1, 1).toLocaleDateString("en-GB", {
       year: "numeric",
       month: "long",
     });
@@ -432,7 +432,7 @@ export function buildPayslipPrintHtml(opts: {
         <footer>
           ${lang === "ar" ? "الحالة" : "Status"}:
           ${payslipStatusLabel(s.status, lang)}
-          · ${new Date(s.updatedAt).toLocaleString(lang === "ar" ? "ar-JO" : "en-GB")}
+          · ${new Date(s.updatedAt).toLocaleString("en-GB")}
         </footer>
       </section>`,
     )
