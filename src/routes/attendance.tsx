@@ -15,6 +15,7 @@ import { minutesToHoursLabel, WEEKDAY_LABELS, weekdayFromDate } from "@/lib/shif
 import { useStaff } from "@/lib/staff";
 
 export const Route = createFileRoute("/attendance")({
+  ssr: false,
   head: () => ({ meta: [{ title: "الحضور | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: AttendancePage,
 });

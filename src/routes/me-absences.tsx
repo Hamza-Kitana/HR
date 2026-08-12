@@ -13,6 +13,7 @@ import { useI18n } from "@/lib/i18n";
 import { useStaff } from "@/lib/staff";
 
 export const Route = createFileRoute("/me-absences")({
+  ssr: false,
   head: () => ({ meta: [{ title: "الغيابات | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: MeAbsencesPage,
 });

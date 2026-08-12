@@ -15,6 +15,7 @@ import { getRoleLabel, type AppRole } from "@/lib/permissions";
 import { idDocumentLabel, useStaff } from "@/lib/staff";
 
 export const Route = createFileRoute("/employees")({
+  ssr: false,
   head: () => ({ meta: [{ title: "الموظفون | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: EmployeesPage,
 });

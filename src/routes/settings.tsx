@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/settings")({
+  ssr: false,
   head: () => ({ meta: [{ title: "الإعدادات | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: SettingsPage,
 });

@@ -6,6 +6,7 @@ import { useI18n } from "@/lib/i18n";
 import { MOCK_INVOICES } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/invoices")({
+  ssr: false,
   head: () => ({ meta: [{ title: "الفواتير | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: InvoicesPage,
 });

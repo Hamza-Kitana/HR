@@ -19,6 +19,7 @@ import { useStaff } from "@/lib/staff";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/departments")({
+  ssr: false,
   head: () => ({
     meta: [{ title: "الهيكل التنظيمي | توقيعي" }, { name: "robots", content: "noindex" }],
   }),

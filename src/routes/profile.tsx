@@ -24,6 +24,7 @@ import { idDocumentLabel, useStaff } from "@/lib/staff";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/profile")({
+  ssr: false,
   head: () => ({ meta: [{ title: "ملفي الشخصي | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: ProfilePage,
 });

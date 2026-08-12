@@ -4,6 +4,7 @@ import { AppShell } from "@/components/app/app-shell";
 import { HrRequestsInbox } from "@/components/app/hr-requests-inbox";
 
 export const Route = createFileRoute("/contact-changes")({
+  ssr: false,
   head: () => ({
     meta: [{ title: "تعديل بيانات التواصل | توقيعي" }, { name: "robots", content: "noindex" }],
   }),

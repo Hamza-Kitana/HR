@@ -5,6 +5,7 @@ import { ErpModulePage } from "@/components/app/erp-module-page";
 import { MOCK_TAX } from "@/lib/erp-modules";
 
 export const Route = createFileRoute("/tax")({
+  ssr: false,
   head: () => ({ meta: [{ title: "الضريبة | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: TaxPage,
 });

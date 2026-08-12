@@ -43,6 +43,7 @@ import {
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/recruitment")({
+  ssr: false,
   head: () => ({ meta: [{ title: "طلبات التوظيف | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: RecruitmentPage,
 });

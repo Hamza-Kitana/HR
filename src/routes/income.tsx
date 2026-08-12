@@ -5,6 +5,7 @@ import { ErpModulePage } from "@/components/app/erp-module-page";
 import { MOCK_INCOME } from "@/lib/erp-modules";
 
 export const Route = createFileRoute("/income")({
+  ssr: false,
   head: () => ({ meta: [{ title: "الدخل | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: IncomePage,
 });

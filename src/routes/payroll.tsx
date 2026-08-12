@@ -23,6 +23,7 @@ import {
 import { useStaff } from "@/lib/staff";
 
 export const Route = createFileRoute("/payroll")({
+  ssr: false,
   head: () => ({ meta: [{ title: "الرواتب | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: PayrollPage,
 });

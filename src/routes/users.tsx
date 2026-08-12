@@ -10,6 +10,7 @@ import { getRoleLabel, type AppRole } from "@/lib/permissions";
 import { useStaff } from "@/lib/staff";
 
 export const Route = createFileRoute("/users")({
+  ssr: false,
   head: () => ({ meta: [{ title: "المستخدمون | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: UsersPage,
 });

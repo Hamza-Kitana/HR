@@ -48,9 +48,19 @@ import { useStaff } from "@/lib/staff";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/dashboard")({
+  ssr: false,
   head: () => ({ meta: [{ title: "لوحة التحكم | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: DashboardPage,
+  pendingComponent: DashboardPending,
 });
+
+function DashboardPending() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">
+      جارٍ التحميل...
+    </div>
+  );
+}
 
 function todayIso() {
   const d = new Date();

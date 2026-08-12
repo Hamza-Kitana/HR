@@ -15,6 +15,7 @@ import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/audit")({
+  ssr: false,
   head: () => ({ meta: [{ title: "اللوجات | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: LogsPage,
 });

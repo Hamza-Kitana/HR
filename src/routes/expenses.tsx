@@ -5,6 +5,7 @@ import { ErpModulePage } from "@/components/app/erp-module-page";
 import { MOCK_EXPENSES } from "@/lib/erp-modules";
 
 export const Route = createFileRoute("/expenses")({
+  ssr: false,
   head: () => ({ meta: [{ title: "المصاريف | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: ExpensesPage,
 });

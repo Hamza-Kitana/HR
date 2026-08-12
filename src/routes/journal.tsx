@@ -4,6 +4,7 @@ import { ErpModulePage } from "@/components/app/erp-module-page";
 import { MOCK_JOURNAL } from "@/lib/erp-modules";
 
 export const Route = createFileRoute("/journal")({
+  ssr: false,
   head: () => ({ meta: [{ title: "قيود محاسبية | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: JournalPage,
 });

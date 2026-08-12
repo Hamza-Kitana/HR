@@ -34,6 +34,7 @@ import { useStaff, type StaffRecord } from "@/lib/staff";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/contracts")({
+  ssr: false,
   head: () => ({ meta: [{ title: "عقود العمل | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: ContractsPage,
 });

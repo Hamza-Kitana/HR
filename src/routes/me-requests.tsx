@@ -19,6 +19,7 @@ import { useI18n } from "@/lib/i18n";
 import { useStaff } from "@/lib/staff";
 
 export const Route = createFileRoute("/me-requests")({
+  ssr: false,
   head: () => ({ meta: [{ title: "طلباتي | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: MeRequestsPage,
 });

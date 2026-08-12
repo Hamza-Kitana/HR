@@ -4,6 +4,7 @@ import { AppShell } from "@/components/app/app-shell";
 import { HrRequestsInbox } from "@/components/app/hr-requests-inbox";
 
 export const Route = createFileRoute("/resignations")({
+  ssr: false,
   head: () => ({ meta: [{ title: "الاستقالات | توقيعي" }, { name: "robots", content: "noindex" }] }),
   component: ResignationsPage,
 });
