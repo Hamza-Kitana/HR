@@ -106,7 +106,7 @@ function Landing() {
                 {t("hero.badge")}
               </span>
 
-              <h1 className="animate-fade-up text-4xl leading-[1.15] font-extrabold text-balance sm:text-5xl md:text-6xl [animation-delay:120ms]">
+              <h1 className="animate-fade-up text-3xl leading-[1.15] font-extrabold text-balance sm:text-5xl md:text-6xl [animation-delay:120ms]">
                 {t("hero.title1")}{" "}
                 <span className="relative inline-block text-gradient-brand">
                   {t("hero.title2")}

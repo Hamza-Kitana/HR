@@ -211,11 +211,17 @@
     border-color: var(--color-border);
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     font-variant-numeric: lining-nums tabular-nums;
+    overflow-x: clip;
   }
 
   h1,
@@ -268,6 +274,18 @@
 
   .shadow-glow {
     box-shadow: var(--shadow-glow);
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .touch-pan-x {
+    touch-action: pan-x;
   }
 
   .app-sidebar {

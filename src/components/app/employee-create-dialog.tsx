@@ -245,7 +245,7 @@ export function EmployeeCreateDialog({
       <DialogContent className="max-h-[92vh] w-[min(96vw,52rem)] max-w-none gap-0 overflow-hidden rounded-3xl border-border p-0 shadow-lift">
         {createdAccount ? (
           <>
-            <DialogHeader className="border-b border-border bg-card px-6 py-5 text-start sm:text-start">
+            <DialogHeader className="border-b border-border bg-card px-4 py-4 text-start sm:px-6 sm:py-5 sm:text-start">
               <DialogTitle className="font-display text-xl font-bold">
                 {lang === "ar" ? "تم إنشاء حساب الموظف" : "Employee account created"}
               </DialogTitle>
@@ -309,7 +309,7 @@ export function EmployeeCreateDialog({
           </>
         ) : (
           <>
-        <DialogHeader className="border-b border-border bg-card px-6 py-5 text-start sm:text-start">
+        <DialogHeader className="border-b border-border bg-card px-4 py-4 text-start sm:px-6 sm:py-5 sm:text-start">
           <DialogTitle className="font-display text-xl font-bold">{t("emp.newEmployee")}</DialogTitle>
           <DialogDescription className="text-sm">
             {lang === "ar"
@@ -318,7 +318,7 @@ export function EmployeeCreateDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="max-h-[calc(92vh-5.5rem)] space-y-6 overflow-y-auto px-6 py-5">
+        <form onSubmit={handleSubmit} className="max-h-[calc(92vh-5.5rem)] space-y-6 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
           <Section title={lang === "ar" ? "1) البيانات الشخصية" : "1) Personal details"}>
             <div className="mb-4 rounded-2xl border border-border bg-secondary/25 p-4">
               <EmployeeAvatarUploader

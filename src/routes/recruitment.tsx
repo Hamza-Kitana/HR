@@ -652,7 +652,7 @@ function ApplicationDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[92vh] w-[min(96vw,44rem)] flex-col gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-2xl">
-        <DialogHeader className="shrink-0 border-b border-border px-6 py-5 text-start">
+        <DialogHeader className="shrink-0 border-b border-border px-4 py-4 text-start sm:px-6 sm:py-5">
           <DialogTitle>{lang === "ar" ? "طلب توظيف جديد" : "New job application"}</DialogTitle>
           <DialogDescription>
             {lang === "ar"
@@ -660,7 +660,7 @@ function ApplicationDialog({
               : "Enter full applicant details with cover letter and CV."}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-5">
+        <form onSubmit={handleSubmit} className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
           <Field label={lang === "ar" ? "الشاغر" : "Opening"}>
             <select
               className={selectClass}
@@ -900,7 +900,7 @@ function ApplicationDetailDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[94vh] w-[min(96vw,52rem)] flex-col gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-3xl">
-        <DialogHeader className="shrink-0 border-b border-border px-6 py-5 text-start">
+        <DialogHeader className="shrink-0 border-b border-border px-4 py-4 text-start sm:px-6 sm:py-5">
           <div className="flex items-start gap-4 pe-6">
             <EmployeeAvatar name={application.fullName} size="lg" rounded="2xl" />
             <div className="min-w-0 flex-1 space-y-2">
@@ -946,7 +946,7 @@ function ApplicationDetailDialog({
         </DialogHeader>
 
         {editing ? (
-          <form onSubmit={saveEdit} className="min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-5">
+          <form onSubmit={saveEdit} className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label={lang === "ar" ? "الاسم الكامل" : "Full name"}>
                 <Input value={fullName} onChange={(e) => setFullName(e.target.value)} className="rounded-xl" required />
@@ -1037,7 +1037,7 @@ function ApplicationDetailDialog({
           </form>
         ) : (
           <>
-            <div className="flex shrink-0 flex-wrap gap-2 border-b border-border px-6 py-3">
+            <div className="flex shrink-0 flex-wrap gap-2 border-b border-border px-4 py-3 sm:px-6">
               {tabs.map((item) => (
                 <button
                   key={item.id}
@@ -1055,7 +1055,7 @@ function ApplicationDetailDialog({
               ))}
             </div>
 
-            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-5">
+            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
               {detailTab === "profile" ? (
                 <div className="space-y-4">
                   <section className="rounded-2xl border border-border bg-card p-4">

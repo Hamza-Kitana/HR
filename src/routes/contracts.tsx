@@ -257,7 +257,7 @@ function ContractViewDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[94vh] w-[min(96vw,52rem)] flex-col gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-3xl">
-        <DialogHeader className="shrink-0 border-b border-border px-6 py-5 text-start">
+        <DialogHeader className="shrink-0 border-b border-border px-4 py-4 text-start sm:px-6 sm:py-5">
           <div className="flex flex-wrap items-start gap-4 pe-6">
             {employee ? (
               <EmployeeAvatar name={employee.full_name} src={employee.avatarUrl} size="lg" rounded="2xl" />
@@ -284,7 +284,7 @@ function ContractViewDialog({
           </div>
         </DialogHeader>
 
-        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-5">
+        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Meta label={lang === "ar" ? "البداية" : "Start"} value={contract.startDate} />
             <Meta
@@ -403,7 +403,7 @@ function CreateContractDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[92vh] w-[min(96vw,44rem)] flex-col gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-2xl">
-        <DialogHeader className="shrink-0 border-b border-border px-6 py-5 text-start">
+        <DialogHeader className="shrink-0 border-b border-border px-4 py-4 text-start sm:px-6 sm:py-5">
           <DialogTitle>{lang === "ar" ? "إنشاء عقد عمل" : "Create employment contract"}</DialogTitle>
           <DialogDescription>
             {lang === "ar"
@@ -411,7 +411,7 @@ function CreateContractDialog({
               : "Link the contract to an employee — or generate a professional demo body."}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="min-h-0 flex-1 space-y-3 overflow-y-auto px-6 py-5">
+        <form onSubmit={handleSubmit} className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
           <Field label={lang === "ar" ? "الموظف" : "Employee"}>
             <select className={selectClass} value={emp?.id ?? ""} onChange={(e) => {
               setEmployeeId(e.target.value);

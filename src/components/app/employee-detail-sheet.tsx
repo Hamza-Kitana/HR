@@ -228,7 +228,7 @@ export function EmployeeDetailSheet({
           <div className="p-8 text-sm text-muted-foreground">{t("common.empty")}</div>
         ) : (
           <div className="flex max-h-[92vh] flex-col">
-            <DialogHeader className="border-b border-border bg-card px-6 py-5 text-start sm:text-start">
+            <DialogHeader className="border-b border-border bg-card px-4 py-4 text-start sm:px-6 sm:py-5 sm:text-start">
               <div className="flex flex-wrap items-start gap-4 pe-8">
                 <EmployeeAvatarUploader
                   name={employee.full_name}
@@ -266,7 +266,7 @@ export function EmployeeDetailSheet({
               </div>
             </DialogHeader>
 
-            <div className="space-y-5 overflow-y-auto px-6 py-5">
+            <div className="space-y-5 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
               {/* Profile — full width */}
               <section className="space-y-4 rounded-2xl border border-border bg-card p-5">
                 <h3 className="flex items-center gap-2 text-sm font-bold">

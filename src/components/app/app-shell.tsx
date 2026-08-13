@@ -226,25 +226,27 @@ export function AppShell({ children, title }: { children: ReactNode; title: Tran
       {mobileOpen ? (
         <div className="fixed inset-0 z-50 md:hidden">
           <button className="absolute inset-0 bg-black/55" aria-label="Close menu" onClick={() => setMobileOpen(false)} />
-          <aside className="app-sidebar absolute inset-y-0 start-0 w-[19rem] overflow-hidden shadow-lift">{nav}</aside>
+          <aside className="app-sidebar absolute inset-y-0 start-0 w-[min(19rem,88vw)] overflow-hidden shadow-lift">
+            {nav}
+          </aside>
         </div>
       ) : null}
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-40 flex items-center justify-between gap-3 border-b border-border bg-card/90 px-4 py-3 backdrop-blur md:px-6">
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileOpen(true)}>
+      <div className="flex min-w-0 flex-1 flex-col overflow-x-clip">
+        <header className="sticky top-0 z-40 flex items-center justify-between gap-2 border-b border-border bg-card/90 px-3 py-2.5 backdrop-blur sm:gap-3 sm:px-4 sm:py-3 md:px-6">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+            <Button variant="ghost" size="icon" className="shrink-0 md:hidden" onClick={() => setMobileOpen(true)}>
               {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </Button>
-            <div>
-              <h1 className="font-display text-lg font-bold md:text-xl">{t(title)}</h1>
-              <p className="text-xs text-muted-foreground md:text-sm">
+            <div className="min-w-0">
+              <h1 className="truncate font-display text-base font-bold sm:text-lg md:text-xl">{t(title)}</h1>
+              <p className="hidden truncate text-xs text-muted-foreground sm:block md:text-sm">
                 {t("dash.welcome")}, {profile?.full_name}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
             <div className="relative">
               <Button variant="ghost" size="icon" className="relative rounded-full" onClick={() => setNotifOpen((v) => !v)}>
                 <Bell className="size-4" />
@@ -255,7 +257,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: Tran
                 ) : null}
               </Button>
               {notifOpen ? (
-                <div className="absolute end-0 top-11 z-50 w-80 rounded-2xl border border-border bg-card p-3 shadow-lift">
+                <div className="absolute end-0 top-11 z-50 w-[min(20rem,calc(100vw-1.25rem))] rounded-2xl border border-border bg-card p-3 shadow-lift">
                   <div className="mb-2 flex items-center justify-between gap-2 px-1">
                     <p className="text-sm font-semibold">{t("common.notifications")}</p>
                     <div className="flex items-center gap-2">
@@ -320,7 +322,7 @@ export function AppShell({ children, title }: { children: ReactNode; title: Tran
           </div>
         </header>
 
-        <main className="flex-1 px-4 py-6 md:px-6 md:py-8">{children}</main>
+        <main className="flex-1 px-3 py-4 sm:px-4 sm:py-6 md:px-6 md:py-8">{children}</main>
       </div>
     </div>
   );
@@ -337,12 +339,12 @@ export function PageHeader({
 }) {
   const { t } = useI18n();
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <h2 className="font-display text-2xl font-bold">{t(title)}</h2>
+    <div className="mb-5 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-4">
+      <div className="min-w-0">
+        <h2 className="font-display text-xl font-bold sm:text-2xl">{t(title)}</h2>
         {description ? <p className="mt-1 text-sm text-muted-foreground">{description}</p> : null}
       </div>
-      {action}
+      {action ? <div className="w-full sm:w-auto">{action}</div> : null}
     </div>
   );
 }
@@ -380,14 +382,14 @@ export function StatCard({
   compact?: boolean;
 }) {
   return (
-    <div className={cn("surface-panel", compact ? "p-3" : "p-5")}>
+    <div className={cn("surface-panel", compact ? "p-2.5 sm:p-3" : "p-3.5 sm:p-5")}>
       <p className={cn("text-muted-foreground", compact ? "text-[10px] leading-tight" : "text-xs")}>
         {label}
       </p>
       <p
         className={cn(
           "font-display font-bold",
-          compact ? "mt-1 text-lg leading-tight truncate" : "mt-2 text-2xl",
+          compact ? "mt-1 text-base leading-tight truncate sm:text-lg" : "mt-1.5 text-xl sm:mt-2 sm:text-2xl",
         )}
       >
         {value}
@@ -416,12 +418,12 @@ export function DataTable({
   }
   return (
     <div className="surface-panel overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] text-sm">
+      <div className="overflow-x-auto overscroll-x-contain touch-pan-x [-webkit-overflow-scrolling:touch]">
+        <table className="w-full min-w-[32rem] text-sm sm:min-w-[40rem]">
           <thead className="bg-secondary/50 text-muted-foreground">
             <tr>
               {headers.map((h) => (
-                <th key={h} className="px-4 py-3 text-start font-semibold">
+                <th key={h} className="whitespace-nowrap px-3 py-2.5 text-start text-xs font-semibold sm:px-4 sm:py-3 sm:text-sm">
                   {h}
                 </th>
               ))}
@@ -452,7 +454,7 @@ export function DataTable({
                 )}
               >
                 {row.map((cell, cellIdx) => (
-                  <td key={cellIdx} className="px-4 py-3.5 align-middle">
+                  <td key={cellIdx} className="px-3 py-2.5 align-middle sm:px-4 sm:py-3.5">
                     {cell}
                   </td>
                 ))}

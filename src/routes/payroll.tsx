@@ -115,8 +115,8 @@ function PayrollPage() {
             : "Review each employee, apply absence if needed, confirm — then disburse all with one click."
         }
         action={
-          <div className="flex flex-wrap items-center gap-2">
-            <label className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
+            <label className="flex items-center justify-between gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm sm:justify-start">
               <span className="text-muted-foreground">{lang === "ar" ? "شهر العرض" : "Month"}</span>
               <Input
                 type="month"
@@ -129,7 +129,7 @@ function PayrollPage() {
             {canManage ? (
               <Button
                 type="button"
-                className="rounded-xl bg-brand text-brand-foreground shadow-glow"
+                className="w-full rounded-xl bg-brand text-brand-foreground shadow-glow sm:w-auto"
                 disabled={approvedSlips.length === 0}
                 onClick={handleDisburseAll}
               >

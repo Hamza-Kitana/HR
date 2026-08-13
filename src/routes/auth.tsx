@@ -70,10 +70,10 @@ function AuthPage() {
       </div>
 
       <div className="relative w-full max-w-md animate-scale-in">
-        <div className="rounded-[1.75rem] border border-white/12 bg-card/95 p-8 shadow-lift backdrop-blur-xl">
+        <div className="rounded-[1.75rem] border border-white/12 bg-card/95 p-5 shadow-lift backdrop-blur-xl sm:p-8">
           <div className="mb-7 flex flex-col items-center gap-3 text-center">
             <BrandMark className="size-12" />
-            <h1 className="font-display text-2xl font-bold">{t("auth.title")}</h1>
+            <h1 className="font-display text-xl font-bold sm:text-2xl">{t("auth.title")}</h1>
             <p className="text-sm text-muted-foreground">{t("auth.subtitle")}</p>
           </div>
 

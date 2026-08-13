@@ -112,8 +112,8 @@ function MeRequestsPage() {
       </div>
 
       <div className="mb-6 grid gap-6 lg:grid-cols-2">
-        <section className="rounded-2xl border border-border bg-card p-5">
-          <div className="mb-4 flex gap-2">
+        <section className="rounded-2xl border border-border bg-card p-4 sm:p-5">
+          <div className="mb-4 flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setTab("leave")}

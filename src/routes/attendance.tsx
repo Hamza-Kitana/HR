@@ -104,9 +104,11 @@ function AttendancePage() {
               : "Click an employee to view attendance history. Editing requires attendance manage role."
         }
         action={
-          <label className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm">
-            <CalendarDays className="size-4 text-primary" />
-            <span className="text-muted-foreground">{lang === "ar" ? "اليوم" : "Day"}</span>
+          <label className="flex w-full items-center justify-between gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm sm:w-auto sm:justify-start">
+            <span className="inline-flex items-center gap-2 text-muted-foreground">
+              <CalendarDays className="size-4 text-primary" />
+              {lang === "ar" ? "اليوم" : "Day"}
+            </span>
             <Input
               type="date"
               value={date}

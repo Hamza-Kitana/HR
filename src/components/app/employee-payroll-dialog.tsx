@@ -249,7 +249,7 @@ export function EmployeePayrollDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[94vh] w-[min(96vw,58rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl">
-        <DialogHeader className="shrink-0 border-b border-border px-6 py-5 text-start">
+        <DialogHeader className="shrink-0 border-b border-border px-4 py-4 text-start sm:px-6 sm:py-5">
           <div className="flex flex-wrap items-start gap-4">
             <EmployeeAvatar name={employee.full_name} src={employee.avatarUrl} size="lg" rounded="2xl" />
             <div className="min-w-0 flex-1 space-y-1">
@@ -278,7 +278,7 @@ export function EmployeePayrollDialog({
           </div>
         </DialogHeader>
 
-        <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-6 py-5">
+        <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
           <div className="grid gap-4 lg:grid-cols-[1fr_1.2fr]">
             <section className="rounded-2xl border border-border bg-card p-4">
               <h3 className="mb-3 flex items-center gap-2 text-sm font-bold">

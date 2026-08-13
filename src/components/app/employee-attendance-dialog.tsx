@@ -143,7 +143,7 @@ export function EmployeeAttendanceDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[92vh] w-[min(96vw,56rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl">
-        <DialogHeader className="shrink-0 border-b border-border px-6 py-5 text-start">
+        <DialogHeader className="shrink-0 border-b border-border px-4 py-4 text-start sm:px-6 sm:py-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="flex min-w-0 items-start gap-3">
               {employee ? (
@@ -184,7 +184,7 @@ export function EmployeeAttendanceDialog({
         {!employee ? (
           <div className="p-6 text-sm text-muted-foreground">{t("common.empty")}</div>
         ) : (
-          <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-6 py-5">
+          <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">
             {focusRecord ? (
               <section className="rounded-2xl border border-primary/25 bg-primary/5 p-4">
                 <h3 className="mb-1 flex items-center gap-2 text-sm font-bold">

@@ -76,7 +76,7 @@ export function WorkScheduleDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[min(96vw,28rem)] max-w-none gap-0 overflow-hidden rounded-3xl border-border p-0 shadow-lift">
-        <DialogHeader className="border-b border-border bg-card px-6 py-5 text-start sm:text-start">
+        <DialogHeader className="border-b border-border bg-card px-4 py-4 text-start sm:px-6 sm:py-5 sm:text-start">
           <DialogTitle className="font-display text-xl font-bold">
             {lang === "ar" ? "جدول الدوام (من–إلى)" : "Work schedule (from–to)"}
           </DialogTitle>
@@ -86,7 +86,7 @@ export function WorkScheduleDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-5 px-6 py-5">
+        <div className="space-y-5 px-4 py-4 sm:px-6 sm:py-5">
           <div className="space-y-2">
             <Label>{lang === "ar" ? "أيام الدوام" : "Work days"}</Label>
             <div className="flex flex-wrap gap-2">

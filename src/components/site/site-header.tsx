@@ -68,10 +68,10 @@ export function SiteHeader() {
           <div className="flex items-center gap-1">
             <LanguageToggle />
             <ThemeToggle />
-            <Button asChild size="sm" className="ms-1 rounded-full bg-brand text-brand-foreground shadow-glow">
+            <Button asChild size="sm" className="ms-1 rounded-full bg-brand px-2.5 text-brand-foreground shadow-glow sm:px-3">
               <a href="#contact">
-                {t("cta.demo")}
-                <ArrowUpRight className="size-4" />
+                <span className="max-w-[6.5rem] truncate sm:max-w-none">{t("cta.demo")}</span>
+                <ArrowUpRight className="size-4 shrink-0" />
               </a>
             </Button>
           </div>

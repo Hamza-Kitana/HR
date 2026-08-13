@@ -97,7 +97,7 @@ function EmployeesPage() {
         }
         action={
           <Button
-            className="rounded-xl bg-brand text-brand-foreground shadow-glow"
+            className="w-full rounded-xl bg-brand text-brand-foreground shadow-glow sm:w-auto"
             onClick={handleNewClick}
             disabled={!canCreate}
           >
@@ -112,8 +112,8 @@ function EmployeesPage() {
         <StatCard label={lang === "ar" ? "الأقسام" : "Departments"} value={departments} />
       </div>
 
-      <div className="mb-4 flex flex-wrap items-center gap-3">
-        <div className="relative min-w-[16rem] flex-1">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+        <div className="relative w-full min-w-0 flex-1 sm:min-w-[16rem]">
           <Search className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={query}
@@ -122,7 +122,7 @@ function EmployeesPage() {
             className="h-11 rounded-xl ps-10"
           />
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="shrink-0 text-sm text-muted-foreground">
           {lang === "ar" ? `المعروض: ${companyStaff.length}` : `Showing: ${companyStaff.length}`}
         </p>
       </div>

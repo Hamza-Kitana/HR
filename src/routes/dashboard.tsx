@@ -228,17 +228,17 @@ function DashboardPage() {
   return (
     <AppShell title="nav.dashboard">
       {/* Welcome */}
-      <section className="relative mb-6 overflow-hidden rounded-3xl border border-border bg-card shadow-soft animate-fade-up">
+      <section className="relative mb-4 overflow-hidden rounded-2xl border border-border bg-card shadow-soft animate-fade-up sm:mb-6 sm:rounded-3xl">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_100%_0%,oklch(0.55_0.1_185_/_0.18),transparent_55%),radial-gradient(ellipse_50%_40%_at_0%_100%,oklch(0.5_0.08_230_/_0.1),transparent_50%)]"
         />
-        <div className="relative flex flex-col gap-5 p-5 sm:p-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="relative flex flex-col gap-4 p-4 sm:gap-5 sm:p-5 md:p-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0">
             <p className="text-xs font-semibold tracking-wide text-primary">
               {lang === "ar" ? "توقيعي · لوحة التحكم" : "Tawqi3i · Dashboard"}
             </p>
-            <h2 className="mt-1 font-display text-2xl font-bold sm:text-3xl">
+            <h2 className="mt-1 font-display text-xl font-bold sm:text-2xl md:text-3xl">
               {lang === "ar"
                 ? firstName
                   ? `مرحباً، ${firstName}`
@@ -247,21 +247,21 @@ function DashboardPage() {
                   ? `Welcome, ${firstName}`
                   : "Welcome back"}
             </h2>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              {longDateLabel(today, lang)}
-              <span className="mx-2 text-border">·</span>
-              {formatPayrollMonth(payrollMonth, lang)}
+            <p className="mt-1.5 text-xs text-muted-foreground sm:text-sm">
+              <span className="block sm:inline">{longDateLabel(today, lang)}</span>
+              <span className="mx-2 hidden text-border sm:inline">·</span>
+              <span className="mt-0.5 block sm:mt-0 sm:inline">{formatPayrollMonth(payrollMonth, lang)}</span>
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 scrollbar-none touch-pan-x sm:flex-wrap sm:overflow-visible sm:pb-0">
             {quickLinks.map((item) => {
               const Icon = item.icon;
               return (
                 <Link
                   key={item.to}
                   to={item.to}
-                  className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-background/70 px-3 py-2 text-xs font-semibold backdrop-blur transition-colors hover:border-primary/35 hover:bg-primary/5"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-border/80 bg-background/70 px-3 py-2 text-xs font-semibold backdrop-blur transition-colors hover:border-primary/35 hover:bg-primary/5"
                 >
                   <Icon className="size-3.5 text-primary" />
                   {item.label}
@@ -273,7 +273,7 @@ function DashboardPage() {
       </section>
 
       {/* Primary KPIs */}
-      <div className="mb-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4 animate-fade-up [animation-delay:60ms]">
+      <div className="mb-3 grid grid-cols-2 gap-2 sm:gap-3 xl:grid-cols-4 animate-fade-up [animation-delay:60ms]">
         <KpiCard
           icon={Users}
           label={t("dash.employees")}
@@ -287,7 +287,7 @@ function DashboardPage() {
           value={presentToday}
           hint={
             lang === "ar"
-              ? `نسبة الحضور ${attendanceRate}% · متأخر ${lateToday}`
+              ? `حضور ${attendanceRate}% · متأخر ${lateToday}`
               : `${attendanceRate}% rate · ${lateToday} late`
           }
           to="/attendance"
@@ -295,7 +295,7 @@ function DashboardPage() {
         />
         <KpiCard
           icon={CalendarDays}
-          label={lang === "ar" ? "طلبات بانتظار القرار" : "Pending HR"}
+          label={lang === "ar" ? "طلبات بانتظار" : "Pending HR"}
           value={pendingHr}
           hint={
             lang === "ar"
@@ -311,15 +311,15 @@ function DashboardPage() {
           value={`${money(payrollTotal)}`}
           hint={
             lang === "ar"
-              ? `JOD · مدفوع ${money(paidNet)} · ${monthSlips.length} مسير`
-              : `JOD · paid ${money(paidNet)} · ${monthSlips.length} slips`
+              ? `JOD · مدفوع ${money(paidNet)}`
+              : `JOD · paid ${money(paidNet)}`
           }
           to="/payroll"
         />
       </div>
 
       {/* Secondary pulse */}
-      <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-4 animate-fade-up [animation-delay:100ms]">
+      <div className="mb-5 grid grid-cols-2 gap-2 sm:mb-6 sm:grid-cols-4 animate-fade-up [animation-delay:100ms]">
         <PulseStat
           label={lang === "ar" ? "غائبون اليوم" : "Absent today"}
           value={absentToday}
@@ -346,13 +346,13 @@ function DashboardPage() {
       </div>
 
       {/* Charts + today mix */}
-      <div className="mb-6 grid gap-4 xl:grid-cols-5 animate-fade-up [animation-delay:140ms]">
+      <div className="mb-5 grid gap-3 sm:mb-6 sm:gap-4 xl:grid-cols-5 animate-fade-up [animation-delay:140ms]">
         <Panel className="xl:col-span-3" title={t("dash.attendanceTrend")} subtitle={lang === "ar" ? "آخر 7 أيام" : "Last 7 days"}>
-          <ChartContainer config={attendanceBarConfig} className="aspect-[16/9] w-full min-h-[14rem]">
-            <BarChart data={attendanceWeek} margin={{ left: 4, right: 8, top: 8, bottom: 0 }}>
+          <ChartContainer config={attendanceBarConfig} className="aspect-[5/4] w-full min-h-[11rem] sm:aspect-[16/9] sm:min-h-[14rem]">
+            <BarChart data={attendanceWeek} margin={{ left: 0, right: 4, top: 8, bottom: 0 }}>
               <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-border/60" />
-              <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} fontSize={11} />
-              <YAxis allowDecimals={false} tickLine={false} axisLine={false} width={28} fontSize={11} />
+              <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} fontSize={10} />
+              <YAxis allowDecimals={false} tickLine={false} axisLine={false} width={24} fontSize={10} />
               <ChartTooltip content={<ChartTooltipContent />} />
               <ChartLegend content={<ChartLegendContent />} />
               <Bar dataKey="present" stackId="a" fill="var(--color-present)" radius={[0, 0, 0, 0]} />
@@ -419,7 +419,7 @@ function DashboardPage() {
       </div>
 
       {/* Recruitment + activity */}
-      <div className="mb-6 grid gap-4 xl:grid-cols-5 animate-fade-up [animation-delay:180ms]">
+      <div className="mb-5 grid gap-3 sm:mb-6 sm:gap-4 xl:grid-cols-5 animate-fade-up [animation-delay:180ms]">
         <Panel
           className="xl:col-span-2"
           title={lang === "ar" ? "مسار التوظيف" : "Recruitment pipeline"}
@@ -581,16 +581,18 @@ function KpiCard({
   return (
     <Link
       to={to}
-      className="surface-panel group relative block overflow-hidden p-5 transition-colors hover:border-primary/30 hover:bg-card"
+      className="surface-panel group relative block overflow-hidden p-3.5 transition-colors hover:border-primary/30 hover:bg-card sm:p-5"
     >
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-2 sm:gap-3">
         <div className="min-w-0">
-          <p className="text-xs text-muted-foreground">{label}</p>
-          <p className="mt-2 font-display text-2xl font-bold tracking-tight tabular-nums">{value}</p>
-          {hint ? <p className="mt-1 truncate text-xs text-muted-foreground">{hint}</p> : null}
+          <p className="text-[11px] text-muted-foreground sm:text-xs">{label}</p>
+          <p className="mt-1.5 font-display text-xl font-bold tracking-tight tabular-nums sm:mt-2 sm:text-2xl">
+            {value}
+          </p>
+          {hint ? <p className="mt-1 line-clamp-2 text-[11px] text-muted-foreground sm:truncate sm:text-xs">{hint}</p> : null}
         </div>
-        <span className={cn("grid size-11 shrink-0 place-items-center rounded-2xl", accentIcon)}>
-          <Icon className="size-5" />
+        <span className={cn("grid size-9 shrink-0 place-items-center rounded-xl sm:size-11 sm:rounded-2xl", accentIcon)}>
+          <Icon className="size-4 sm:size-5" />
         </span>
       </div>
     </Link>
@@ -609,17 +611,17 @@ function PulseStat({
   tone?: "muted" | "danger";
 }) {
   return (
-    <div className="rounded-2xl border border-border/80 bg-card/70 px-3.5 py-3">
-      <p className="text-[11px] text-muted-foreground">{label}</p>
+    <div className="rounded-xl border border-border/80 bg-card/70 px-2.5 py-2.5 sm:rounded-2xl sm:px-3.5 sm:py-3">
+      <p className="text-[10px] text-muted-foreground sm:text-[11px]">{label}</p>
       <p
         className={cn(
-          "mt-1 font-display text-lg font-bold tabular-nums leading-none",
+          "mt-1 font-display text-base font-bold tabular-nums leading-none sm:text-lg",
           tone === "danger" && "text-destructive",
         )}
       >
         {value}
       </p>
-      {hint ? <p className="mt-1 truncate text-[11px] text-muted-foreground">{hint}</p> : null}
+      {hint ? <p className="mt-1 truncate text-[10px] text-muted-foreground sm:text-[11px]">{hint}</p> : null}
     </div>
   );
 }
@@ -638,10 +640,10 @@ function Panel({
   className?: string;
 }) {
   return (
-    <section className={cn("surface-panel p-5", className)}>
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
+    <section className={cn("surface-panel p-3.5 sm:p-5", className)}>
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-2 sm:mb-4">
         <div className="min-w-0">
-          <h3 className="font-display text-base font-bold">{title}</h3>
+          <h3 className="font-display text-sm font-bold sm:text-base">{title}</h3>
           {subtitle ? <p className="mt-0.5 text-xs text-muted-foreground">{subtitle}</p> : null}
         </div>
         {action}
