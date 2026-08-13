@@ -16,6 +16,8 @@ export type OrgPosition = {
   departmentId: string;
   name: string;
   description: string;
+  /** Reports to this position in the org chart; null = top of hierarchy (e.g. CEO). */
+  parentPositionId: string | null;
 };
 
 export type OrgRole = {
@@ -63,25 +65,193 @@ function seedDepartments(): OrgDepartment[] {
 
 function seedPositions(departments: OrgDepartment[]): OrgPosition[] {
   const byName = Object.fromEntries(departments.map((d) => [d.name, d.id]));
-  const rows: Array<{ dept: string; name: string; description: string }> = [
-    { dept: "الإدارة التنفيذية", name: "المدير التنفيذي", description: "قيادة الشركة" },
-    { dept: "الإدارة التنفيذية", name: "مدير النظام", description: "إدارة النظام والصلاحيات" },
-    { dept: "الموارد البشرية", name: "مديرة الموارد البشرية", description: "إدارة شؤون الموظفين" },
-    { dept: "الموارد البشرية", name: "أخصائي موارد بشرية", description: "تنفيذ عمليات HR" },
-    { dept: "المالية", name: "محاسب رئيسي", description: "الحسابات والفواتير" },
-    { dept: "المالية", name: "محاسب", description: "قيود ومصاريف" },
-    { dept: "التقنية", name: "المدير التقني", description: "قيادة التقنية والمشاريع" },
-    { dept: "التقنية", name: "مطور واجهات", description: "تطوير Frontend" },
-    { dept: "الدعم الفني", name: "مسؤول دعم فني", description: "دعم العملاء" },
+  const rows: Array<{
+    key: string;
+    dept: string;
+    name: string;
+    description: string;
+    parentKey: string | null;
+  }> = [
+    {
+      key: "ceo",
+      dept: "الإدارة التنفيذية",
+      name: "المدير التنفيذي",
+      description: "قيادة الشركة",
+      parentKey: null,
+    },
+    {
+      key: "sysadmin",
+      dept: "الإدارة التنفيذية",
+      name: "مدير النظام",
+      description: "إدارة النظام والصلاحيات",
+      parentKey: "ceo",
+    },
+    {
+      key: "hr-head",
+      dept: "الموارد البشرية",
+      name: "مديرة الموارد البشرية",
+      description: "إدارة شؤون الموظفين",
+      parentKey: "ceo",
+    },
+    {
+      key: "hr-spec",
+      dept: "الموارد البشرية",
+      name: "أخصائي موارد بشرية",
+      description: "تنفيذ عمليات HR",
+      parentKey: "hr-head",
+    },
+    {
+      key: "payroll-lead",
+      dept: "المالية",
+      name: "مسؤول رواتب",
+      description: "إدارة الرواتب والمسير",
+      parentKey: "ceo",
+    },
+    {
+      key: "senior-acc",
+      dept: "المالية",
+      name: "محاسب رئيسي",
+      description: "الحسابات والفواتير",
+      parentKey: "payroll-lead",
+    },
+    {
+      key: "accountant",
+      dept: "المالية",
+      name: "محاسب",
+      description: "قيود ومصاريف",
+      parentKey: "payroll-lead",
+    },
+    {
+      key: "cto",
+      dept: "التقنية",
+      name: "المدير التقني",
+      description: "مسؤول قسم التقنية",
+      parentKey: "ceo",
+    },
+    {
+      key: "tech-lead",
+      dept: "التقنية",
+      name: "تيم ليد",
+      description: "قيادة فريق التطوير",
+      parentKey: "cto",
+    },
+    {
+      key: "frontend",
+      dept: "التقنية",
+      name: "مطور واجهات",
+      description: "تطوير Frontend ضمن التيم",
+      parentKey: "tech-lead",
+    },
+    {
+      key: "support",
+      dept: "الدعم الفني",
+      name: "مسؤول دعم فني",
+      description: "دعم العملاء",
+      parentKey: "ceo",
+    },
+    {
+      key: "support-spec",
+      dept: "الدعم الفني",
+      name: "أخصائية دعم فني",
+      description: "دعم فني مباشر",
+      parentKey: "support",
+    },
   ];
+  const idByKey = Object.fromEntries(rows.map((r) => [r.key, `pos-${r.key}`]));
   return rows
     .filter((r) => byName[r.dept])
     .map((r) => ({
-      id: uid("pos"),
+      id: idByKey[r.key]!,
       departmentId: byName[r.dept]!,
       name: r.name,
       description: r.description,
+      parentPositionId: r.parentKey ? idByKey[r.parentKey]! : null,
     }));
+}
+
+/** When stored positions lack hierarchy, wire common Arabic titles under CEO. */
+function inferParentIds(positions: OrgPosition[]): OrgPosition[] {
+  if (!positions.length) return positions;
+  if (positions.some((p) => p.parentPositionId)) return positions;
+
+  const byTitle = new Map(positions.map((p) => [p.name.trim(), p.id]));
+  const ceoId =
+    byTitle.get("المدير التنفيذي") ??
+    positions.find((p) => /ceo|المدير التنفيذي/i.test(p.name))?.id ??
+    null;
+  if (!ceoId) return positions;
+
+  const underCeo = new Set([
+    "مدير النظام",
+    "مديرة الموارد البشرية",
+    "مسؤول رواتب",
+    "المدير التقني",
+    "مسؤول دعم فني",
+  ]);
+  const underHr = new Set(["أخصائي موارد بشرية"]);
+  const underPayroll = new Set(["محاسب", "محاسب رئيسي"]);
+  const underCto = new Set(["تيم ليد"]);
+  const underTechLead = new Set(["مطور واجهات"]);
+  const underSupport = new Set(["أخصائية دعم فني"]);
+
+  const hrId = byTitle.get("مديرة الموارد البشرية") ?? null;
+  const payId = byTitle.get("مسؤول رواتب") ?? byTitle.get("محاسب رئيسي") ?? null;
+  const ctoId = byTitle.get("المدير التقني") ?? null;
+  const techLeadId = byTitle.get("تيم ليد") ?? null;
+  const supportId = byTitle.get("مسؤول دعم فني") ?? null;
+
+  return positions.map((p) => {
+    if (p.id === ceoId) return { ...p, parentPositionId: null };
+    if (underHr.has(p.name) && hrId) return { ...p, parentPositionId: hrId };
+    if (underSupport.has(p.name) && supportId) return { ...p, parentPositionId: supportId };
+    if (underTechLead.has(p.name) && techLeadId) return { ...p, parentPositionId: techLeadId };
+    if (underCto.has(p.name) && ctoId) return { ...p, parentPositionId: ctoId };
+    if (underPayroll.has(p.name) && payId && p.id !== payId) return { ...p, parentPositionId: payId };
+    if (underCeo.has(p.name)) return { ...p, parentPositionId: ceoId };
+    return { ...p, parentPositionId: ceoId };
+  });
+}
+
+/** Ensure Tech dept has Team Lead between CTO and developers when missing. */
+function ensureTechLeadBridge(positions: OrgPosition[], departments: OrgDepartment[]): OrgPosition[] {
+  const techDept = departments.find((d) => d.name === "التقنية");
+  if (!techDept) return positions;
+  if (positions.some((p) => p.name === "تيم ليد" && p.departmentId === techDept.id)) {
+    return positions;
+  }
+  const cto = positions.find((p) => p.name === "المدير التقني" && p.departmentId === techDept.id);
+  const frontend = positions.find((p) => p.name === "مطور واجهات" && p.departmentId === techDept.id);
+  if (!cto) return positions;
+
+  const leadId = "pos-tech-lead";
+  const lead: OrgPosition = {
+    id: leadId,
+    departmentId: techDept.id,
+    name: "تيم ليد",
+    description: "قيادة فريق التطوير",
+    parentPositionId: cto.id,
+  };
+  const next = positions.map((p) =>
+    frontend && p.id === frontend.id ? { ...p, parentPositionId: leadId } : p,
+  );
+  return [...next, lead];
+}
+
+function normalizePositions(raw: unknown[], departments: OrgDepartment[]): OrgPosition[] {
+  const mapped = raw
+    .map((item) => {
+      const p = item as Partial<OrgPosition> & { id?: string };
+      return {
+        id: p.id || uid("pos"),
+        departmentId: p.departmentId || "",
+        name: (p.name || "").trim(),
+        description: p.description || "",
+        parentPositionId: p.parentPositionId ?? null,
+      } satisfies OrgPosition;
+    })
+    .filter((p) => p.id && p.name && p.departmentId);
+
+  return ensureTechLeadBridge(inferParentIds(mapped), departments);
 }
 
 function seedRoles(departments: OrgDepartment[]): OrgRole[] {
@@ -137,7 +307,9 @@ function readOrg(): Persisted {
     if (!parsed.departments?.length) return seedAll();
     return {
       departments: parsed.departments,
-      positions: Array.isArray(parsed.positions) ? parsed.positions : [],
+      positions: Array.isArray(parsed.positions)
+        ? normalizePositions(parsed.positions, parsed.departments)
+        : [],
       roles: Array.isArray(parsed.roles)
         ? parsed.roles.map((r) => ({
             ...r,
@@ -240,6 +412,7 @@ export function OrgProvider({ children }: { children: ReactNode }) {
         departmentId: input.departmentId,
         name,
         description: input.description.trim(),
+        parentPositionId: input.parentPositionId ?? null,
       };
       return [...prev, created];
     });
@@ -258,16 +431,18 @@ export function OrgProvider({ children }: { children: ReactNode }) {
 
   const updatePosition = useCallback((id: string, patch: Partial<Omit<OrgPosition, "id">>) => {
     setPositions((prev) =>
-      prev.map((p) =>
-        p.id === id
-          ? {
-              ...p,
-              ...patch,
-              name: patch.name?.trim() ?? p.name,
-              description: patch.description?.trim() ?? p.description,
-            }
-          : p,
-      ),
+      prev.map((p) => {
+        if (p.id !== id) return p;
+        const nextParent =
+          patch.parentPositionId === undefined ? p.parentPositionId : patch.parentPositionId;
+        return {
+          ...p,
+          ...patch,
+          name: patch.name?.trim() ?? p.name,
+          description: patch.description?.trim() ?? p.description,
+          parentPositionId: nextParent === id ? null : nextParent,
+        };
+      }),
     );
     logActivity({
       module: "org",
@@ -285,7 +460,10 @@ export function OrgProvider({ children }: { children: ReactNode }) {
     setPositions((prev) => {
       const target = prev.find((p) => p.id === id);
       if (target) name = target.name;
-      return prev.filter((p) => p.id !== id);
+      const parentId = target?.parentPositionId ?? null;
+      return prev
+        .filter((p) => p.id !== id)
+        .map((p) => (p.parentPositionId === id ? { ...p, parentPositionId: parentId } : p));
     });
     logActivity({
       module: "org",

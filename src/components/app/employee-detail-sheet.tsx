@@ -17,6 +17,11 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
 import { useOrg } from "@/lib/org-structure";
+import {
+  orderedDepartmentPositions,
+  positionReportsLabel,
+  resolveStaffPositionId,
+} from "@/lib/org-tree";
 import { ASSIGNABLE_HR_ROLES, getRoleLabel, type AppRole } from "@/lib/permissions";
 import { hoursBetween, isValidTime, WEEKDAY_LABELS } from "@/lib/shifts";
 import {
@@ -44,7 +49,7 @@ export function EmployeeDetailSheet({
   const { t, lang } = useI18n();
   const { can, isSuperAdmin, session, reload } = useAuth();
   const { getStaff, updateStaff, toggleRole, deleteStaff } = useStaff();
-  const { departments, positionsForDepartment } = useOrg();
+  const { departments, positions } = useOrg();
 
   const employee = employeeId ? getStaff(employeeId) : undefined;
   const canEditDetails =
@@ -113,7 +118,17 @@ export function EmployeeDetailSheet({
   const resolvedNat = natSelect === "أخرى" ? natCustom.trim() : natSelect;
   const docLabel = idDocumentLabel(resolvedNat || employee?.nationality, lang);
   const employeeDept = departments.find((d) => d.name === employee?.department);
-  const employeePositions = employeeDept ? positionsForDepartment(employeeDept.id) : [];
+  const employeePositions = employeeDept
+    ? orderedDepartmentPositions(positions, employeeDept.id)
+    : [];
+  const employeePositionId =
+    employee &&
+    (employee.positionId && positions.some((p) => p.id === employee.positionId)
+      ? employee.positionId
+      : resolveStaffPositionId(employee, positions, departments));
+  const employeeReportsTo = employeePositionId
+    ? positionReportsLabel(positions, employeePositionId, lang)
+    : "";
 
   const pickableRoles: AppRole[] = [...ASSIGNABLE_HR_ROLES, "super_admin"];
 
@@ -284,52 +299,19 @@ export function EmployeeDetailSheet({
                       }}
                     />
                   </Field>
-                    <Field label={t("emp.jobTitle")}>
-                      {employeePositions.length > 0 ? (
-                        <select
-                          key={`${employee.id}-job-select-${employee.department}-${employee.job_title}`}
-                          className={selectClass}
-                          defaultValue={employee.job_title || ""}
-                          disabled={!canEditDetails}
-                          onChange={(e) => {
-                            if (e.target.value !== employee.job_title) {
-                              saveProfile({ job_title: e.target.value });
-                            }
-                          }}
-                        >
-                          <option value="">
-                            {lang === "ar" ? "— اختر المسمى —" : "— Choose title —"}
-                          </option>
-                          {employee.job_title &&
-                          !employeePositions.some((p) => p.name === employee.job_title) ? (
-                            <option value={employee.job_title}>{employee.job_title}</option>
-                          ) : null}
-                          {employeePositions.map((p) => (
-                            <option key={p.id} value={p.name}>
-                              {p.name}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <Input
-                          key={`${employee.id}-job-${employee.department}`}
-                          defaultValue={employee.job_title}
-                          disabled={!canEditDetails}
-                          onBlur={(e) => {
-                            if (e.target.value !== employee.job_title) saveProfile({ job_title: e.target.value });
-                          }}
-                        />
-                      )}
-                    </Field>
                     <Field label={t("emp.department")}>
                       <select
                         key={`${employee.id}-dept-select`}
                         className={selectClass}
-                        defaultValue={employee.department}
+                        value={employee.department}
                         disabled={!canEditDetails}
                         onChange={(e) => {
                           if (e.target.value !== employee.department) {
-                            saveProfile({ department: e.target.value, job_title: "" });
+                            saveProfile({
+                              department: e.target.value,
+                              job_title: "",
+                              positionId: null,
+                            });
                           }
                         }}
                       >
@@ -342,6 +324,54 @@ export function EmployeeDetailSheet({
                           </option>
                         ))}
                       </select>
+                    </Field>
+                    <Field label={lang === "ar" ? "المنصب في الهرم" : "Hierarchy position"}>
+                      {employeePositions.length > 0 ? (
+                        <select
+                          key={`${employee.id}-pos-select-${employee.department}-${employeePositionId ?? ""}`}
+                          className={selectClass}
+                          value={employeePositionId ?? ""}
+                          disabled={!canEditDetails}
+                          onChange={(e) => {
+                            const nextId = e.target.value;
+                            const pos = positions.find((p) => p.id === nextId);
+                            if (!pos) return;
+                            if (nextId !== employee.positionId) {
+                              saveProfile({
+                                positionId: pos.id,
+                                job_title: pos.name,
+                                department:
+                                  departments.find((d) => d.id === pos.departmentId)?.name ??
+                                  employee.department,
+                              });
+                            }
+                          }}
+                        >
+                          <option value="">
+                            {lang === "ar" ? "— اختر المنصب بالهرم —" : "— Choose hierarchy position —"}
+                          </option>
+                          {employeePositions.map((p) => {
+                            const boss = positionReportsLabel(positions, p.id, lang);
+                            return (
+                              <option key={p.id} value={p.id}>
+                                {p.name}
+                                {boss ? ` ← ${boss}` : ""}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      ) : (
+                        <p className="rounded-xl border border-dashed border-border px-3 py-2.5 text-xs text-muted-foreground">
+                          {lang === "ar"
+                            ? "لا مناصب بهذا القسم — عرّفها من الهيكل التنظيمي أولاً."
+                            : "No positions in this department — define them in Org structure first."}
+                        </p>
+                      )}
+                      {employeeReportsTo ? (
+                        <p className="mt-1.5 text-[11px] text-muted-foreground">
+                          {lang === "ar" ? "يتبع:" : "Reports to:"} {employeeReportsTo}
+                        </p>
+                      ) : null}
                     </Field>
                   <Field label={t("emp.salary")}>
                     <Input

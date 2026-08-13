@@ -14,6 +14,7 @@ import {
   type OrgPosition,
   type OrgRole,
 } from "@/lib/org-structure";
+import { isInvalidParent } from "@/lib/org-tree";
 import { getRoleLabel, ROLE_GROUPS, type AppRole } from "@/lib/permissions";
 import { useStaff } from "@/lib/staff";
 import { cn } from "@/lib/utils";
@@ -63,6 +64,7 @@ function OrgStructurePage() {
   const [posName, setPosName] = useState("");
   const [posDesc, setPosDesc] = useState("");
   const [posDeptId, setPosDeptId] = useState("");
+  const [posParentId, setPosParentId] = useState("");
   const [editingPos, setEditingPos] = useState<OrgPosition | null>(null);
 
   // Role form
@@ -102,7 +104,28 @@ function OrgStructurePage() {
     setPosName("");
     setPosDesc("");
     setPosDeptId(activeDeptId ?? "");
+    const ceo =
+      positions.find((p) => p.name.trim() === "المدير التنفيذي") ??
+      positions.find((p) => !p.parentPositionId) ??
+      null;
+    setPosParentId(ceo?.id ?? "");
   }
+
+  const parentOptions = useMemo(() => {
+    const editingId = editingPos?.id ?? null;
+    return positions.filter((p) => {
+      if (editingId && isInvalidParent(positions, editingId, p.id)) return false;
+      return true;
+    });
+  }, [positions, editingPos?.id]);
+
+  const positionParentLabel = useMemo(() => {
+    const map = Object.fromEntries(positions.map((p) => [p.id, p.name]));
+    return (parentId: string | null) => {
+      if (!parentId) return lang === "ar" ? "أعلى الهرم" : "Top of hierarchy";
+      return map[parentId] ?? (lang === "ar" ? "—" : "—");
+    };
+  }, [positions, lang]);
 
   function resetRoleForm() {
     setEditingRole(null);
@@ -133,11 +156,17 @@ function OrgStructurePage() {
 
   function savePosition() {
     const departmentId = posDeptId || activeDeptId || "";
+    const parentPositionId = posParentId || null;
+    if (editingPos && isInvalidParent(positions, editingPos.id, parentPositionId)) {
+      toast.error(lang === "ar" ? "لا يمكن وضع المنصب تحت نفسه أو تحت أحد مرؤوسيه" : "Cannot nest a position under itself or its reports");
+      return;
+    }
     if (editingPos) {
       updatePosition(editingPos.id, {
         name: posName,
         description: posDesc,
         departmentId,
+        parentPositionId,
       });
       toast.success(lang === "ar" ? "تم تحديث المنصب" : "Position updated");
       resetPosForm();
@@ -147,6 +176,7 @@ function OrgStructurePage() {
       name: posName,
       description: posDesc,
       departmentId,
+      parentPositionId,
     });
     if ("error" in result) {
       toast.error(
@@ -403,9 +433,12 @@ function OrgStructurePage() {
               <div className="space-y-2">
                 {deptPositions.map((p) => (
                   <div key={p.id} className="flex items-start justify-between gap-3 rounded-xl border border-border px-4 py-3">
-                    <div>
+                    <div className="min-w-0">
                       <p className="font-semibold">{p.name}</p>
                       {p.description ? <p className="text-xs text-muted-foreground">{p.description}</p> : null}
+                      <p className="mt-1 text-[11px] text-primary/90">
+                        {lang === "ar" ? "يتبع:" : "Reports to:"} {positionParentLabel(p.parentPositionId)}
+                      </p>
                     </div>
                     <div className="flex gap-2">
                       <Button
@@ -418,6 +451,7 @@ function OrgStructurePage() {
                           setPosName(p.name);
                           setPosDesc(p.description);
                           setPosDeptId(p.departmentId);
+                          setPosParentId(p.parentPositionId ?? "");
                         }}
                       >
                         <Pencil className="size-3.5" />
@@ -462,6 +496,28 @@ function OrgStructurePage() {
             </Field>
             <Field label={lang === "ar" ? "اسم المنصب (Position)" : "Position title"}>
               <Input value={posName} onChange={(e) => setPosName(e.target.value)} placeholder={lang === "ar" ? "مثال: محاسب رئيسي" : "e.g. Senior Accountant"} />
+            </Field>
+            <Field label={lang === "ar" ? "يتبع المنصب (في الهرم)" : "Reports to (in hierarchy)"}>
+              <select
+                className={selectClass}
+                value={posParentId}
+                onChange={(e) => setPosParentId(e.target.value)}
+              >
+                <option value="">{lang === "ar" ? "— أعلى الهرم (مثل CEO) —" : "— Top of hierarchy (e.g. CEO) —"}</option>
+                {parentOptions.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                    {departments.find((d) => d.id === p.departmentId)
+                      ? ` · ${departments.find((d) => d.id === p.departmentId)!.name}`
+                      : ""}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
+                {lang === "ar"
+                  ? "مثال قسم التقنية: المدير التقني تحت CEO ← تيم ليد تحت المدير ← المطورين تحت التيم ليد. بعدين لما تضيف موظف تختَرله هالمنصب."
+                  : "Example Tech: CTO under CEO ← Team lead under CTO ← Devs under Team lead. Then assign employees to these positions."}
+              </p>
             </Field>
             <Field label={lang === "ar" ? "الوصف" : "Description"}>
               <Input value={posDesc} onChange={(e) => setPosDesc(e.target.value)} />

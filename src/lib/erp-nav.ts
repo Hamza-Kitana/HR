@@ -87,6 +87,12 @@ export const ERP_NAV: ErpNavGroup[] = [
           "settings.manage",
         ],
       },
+      {
+        to: "/org-chart",
+        labelKey: "nav.orgChart",
+        // Visible to every signed-in ERP user
+        anyOf: [],
+      },
     ],
   },
   // المحاسبة والمالية — مخفية مؤقتاً من الشريط الجانبي
@@ -127,6 +133,7 @@ export const EMPLOYEE_NAV: ErpNavGroup[] = [
       { to: "/me-absences", labelKey: "nav.myAbsences" },
       { to: "/me-requests", labelKey: "nav.myRequests" },
       { to: "/me-payroll", labelKey: "nav.myPayroll" },
+      { to: "/org-chart", labelKey: "nav.orgChart" },
     ],
   },
 ];
@@ -165,6 +172,7 @@ export function filterErpNav(
     const items = group.items.filter((item) => {
       if (item.to === "/dashboard") {
         // Dashboard only if they have at least one real module
+        // (org-chart is company-wide for everyone — doesn't unlock ERP dashboard)
         return (
           isSuperAdmin ||
           ERP_NAV.some((g) =>
@@ -172,6 +180,7 @@ export function filterErpNav(
               (i) =>
                 i.to !== "/dashboard" &&
                 i.to !== "/profile" &&
+                i.to !== "/org-chart" &&
                 canAccessNavItem(i, permissions, false),
             ),
           )

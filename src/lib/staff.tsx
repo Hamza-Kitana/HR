@@ -62,6 +62,11 @@ export type StaffRecord = Omit<MockUser, "role" | "roles"> & {
   avatarUrl: string;
   /** true = grant extra, false = revoke from role defaults */
   permissionOverrides: Partial<Record<AppPermission, boolean>>;
+  /**
+   * Org-structure position this employee fills.
+   * Required for company staff so they appear in the hierarchy tree.
+   */
+  positionId: string | null;
 };
 
 export type NewStaffInput = {
@@ -71,6 +76,8 @@ export type NewStaffInput = {
   email: string;
   job_title: string;
   department: string;
+  /** Required: position from org structure hierarchy */
+  positionId: string;
   phone: string;
   hire_date: string;
   salary: number;
@@ -114,6 +121,17 @@ const SALARIES: Record<string, number> = {
   omar: 1900,
   nour: 1100,
   yazan: 1500,
+};
+
+/** Stable seed position ids from org-structure seedPositions */
+const SEED_POSITION_IDS: Record<string, string> = {
+  sadmin: "pos-sysadmin",
+  sami: "pos-ceo",
+  raed: "pos-cto",
+  layla: "pos-hr-head",
+  omar: "pos-payroll-lead",
+  nour: "pos-support-spec",
+  yazan: "pos-frontend",
 };
 
 const ADDRESSES: Record<string, string> = {
@@ -197,6 +215,11 @@ function normalizeStaff(raw: Partial<StaffRecord> & { role?: string; roles?: unk
     workHours,
     avatarUrl: typeof raw.avatarUrl === "string" ? raw.avatarUrl : "",
     permissionOverrides: raw.permissionOverrides ?? {},
+    positionId: (() => {
+      if (typeof raw.positionId === "string") return raw.positionId.trim() || null;
+      if (raw.positionId === null) return null;
+      return SEED_POSITION_IDS[raw.username ?? ""] ?? null;
+    })(),
   };
 }
 
@@ -211,6 +234,7 @@ function seedStaff(): StaffRecord[] {
       national_id: `99${user.username.length}${user.id.replace(/\D/g, "").slice(-6).padStart(6, "0")}`,
       notes: user.roles.includes("super_admin") ? "صلاحيات كاملة على النظام" : "موظف ضمن هيكل توقيعي",
       permissionOverrides: {},
+      positionId: SEED_POSITION_IDS[user.username] ?? null,
       ...SCHEDULE_SEED[user.username],
     }),
   );
@@ -302,6 +326,7 @@ export function StaffProvider({ children }: { children: ReactNode }) {
     const roles = normalizeRoles(input.roles);
     const finalRoles = roles.length ? roles : (["employee.base"] as AppRole[]);
 
+    const positionId = input.positionId.trim();
     if (
       !username ||
       !fullName ||
@@ -309,6 +334,7 @@ export function StaffProvider({ children }: { children: ReactNode }) {
       !email ||
       !jobTitle ||
       !department ||
+      !positionId ||
       !phone ||
       !hireDate ||
       !address ||
@@ -352,6 +378,7 @@ export function StaffProvider({ children }: { children: ReactNode }) {
         email,
         job_title: jobTitle,
         department,
+        positionId,
         phone,
         hire_date: hireDate,
         roles: finalRoles,

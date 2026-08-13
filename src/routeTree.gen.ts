@@ -31,6 +31,7 @@ import { Route as MeAbsencesRouteImport } from './routes/me-absences'
 import { Route as MePayrollRouteImport } from './routes/me-payroll'
 import { Route as MeProfileRouteImport } from './routes/me-profile'
 import { Route as MeRequestsRouteImport } from './routes/me-requests'
+import { Route as OrgChartRouteImport } from './routes/org-chart'
 import { Route as PaymentsRouteImport } from './routes/payments'
 import { Route as PayrollRouteImport } from './routes/payroll'
 import { Route as ProfileRouteImport } from './routes/profile'
@@ -150,6 +151,11 @@ const MeRequestsRoute = MeRequestsRouteImport.update({
   path: '/me-requests',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrgChartRoute = OrgChartRouteImport.update({
+  id: '/org-chart',
+  path: '/org-chart',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PaymentsRoute = PaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
@@ -214,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/me-payroll': typeof MePayrollRoute
   '/me-profile': typeof MeProfileRoute
   '/me-requests': typeof MeRequestsRoute
+  '/org-chart': typeof OrgChartRoute
   '/payments': typeof PaymentsRoute
   '/payroll': typeof PayrollRoute
   '/profile': typeof ProfileRoute
@@ -246,6 +253,7 @@ export interface FileRoutesByTo {
   '/me-payroll': typeof MePayrollRoute
   '/me-profile': typeof MeProfileRoute
   '/me-requests': typeof MeRequestsRoute
+  '/org-chart': typeof OrgChartRoute
   '/payments': typeof PaymentsRoute
   '/payroll': typeof PayrollRoute
   '/profile': typeof ProfileRoute
@@ -279,6 +287,7 @@ export interface FileRoutesById {
   '/me-payroll': typeof MePayrollRoute
   '/me-profile': typeof MeProfileRoute
   '/me-requests': typeof MeRequestsRoute
+  '/org-chart': typeof OrgChartRoute
   '/payments': typeof PaymentsRoute
   '/payroll': typeof PayrollRoute
   '/profile': typeof ProfileRoute
@@ -313,6 +322,7 @@ export interface FileRouteTypes {
     | '/me-payroll'
     | '/me-profile'
     | '/me-requests'
+    | '/org-chart'
     | '/payments'
     | '/payroll'
     | '/profile'
@@ -345,6 +355,7 @@ export interface FileRouteTypes {
     | '/me-payroll'
     | '/me-profile'
     | '/me-requests'
+    | '/org-chart'
     | '/payments'
     | '/payroll'
     | '/profile'
@@ -377,6 +388,7 @@ export interface FileRouteTypes {
     | '/me-payroll'
     | '/me-profile'
     | '/me-requests'
+    | '/org-chart'
     | '/payments'
     | '/payroll'
     | '/profile'
@@ -410,6 +422,7 @@ export interface RootRouteChildren {
   MePayrollRoute: typeof MePayrollRoute
   MeProfileRoute: typeof MeProfileRoute
   MeRequestsRoute: typeof MeRequestsRoute
+  OrgChartRoute: typeof OrgChartRoute
   PaymentsRoute: typeof PaymentsRoute
   PayrollRoute: typeof PayrollRoute
   ProfileRoute: typeof ProfileRoute
@@ -576,6 +589,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MeRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/org-chart': {
+      id: '/org-chart'
+      path: '/org-chart'
+      fullPath: '/org-chart'
+      preLoaderRoute: typeof OrgChartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/payments': {
       id: '/payments'
       path: '/payments'
@@ -658,6 +678,7 @@ const rootRouteChildren: RootRouteChildren = {
   MePayrollRoute: MePayrollRoute,
   MeProfileRoute: MeProfileRoute,
   MeRequestsRoute: MeRequestsRoute,
+  OrgChartRoute: OrgChartRoute,
   PaymentsRoute: PaymentsRoute,
   PayrollRoute: PayrollRoute,
   ProfileRoute: ProfileRoute,

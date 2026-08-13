@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { MOCK_DEPARTMENTS } from "@/lib/erp-modules";
 import { useI18n } from "@/lib/i18n";
 import { useOrg } from "@/lib/org-structure";
+import { orderedDepartmentPositions, positionReportsLabel } from "@/lib/org-tree";
 import { ASSIGNABLE_HR_ROLES, getRoleLabel, type AppRole } from "@/lib/permissions";
 import { DEFAULT_WORK_DAYS, hoursBetween, WEEKDAY_LABELS } from "@/lib/shifts";
 import {
@@ -46,7 +47,7 @@ export function EmployeeCreateDialog({
 }) {
   const { t, lang } = useI18n();
   const { addStaff } = useStaff();
-  const { departments, roles: orgRoles, positionsForDepartment } = useOrg();
+  const { departments, roles: orgRoles, positions } = useOrg();
 
   const [fullName, setFullName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
@@ -58,8 +59,7 @@ export function EmployeeCreateDialog({
   const [address, setAddress] = useState("");
   const [username, setUsername] = useState("");
   const [code, setCode] = useState("1234");
-  const [jobTitle, setJobTitle] = useState("");
-  const [customJobTitle, setCustomJobTitle] = useState("");
+  const [positionId, setPositionId] = useState("");
   const [department, setDepartment] = useState("");
   const [hireDate, setHireDate] = useState(todayIso());
   const [salary, setSalary] = useState("1000");
@@ -91,8 +91,7 @@ export function EmployeeCreateDialog({
     setAddress("عمّان، الأردن");
     setUsername("");
     setCode("1234");
-    setJobTitle("");
-    setCustomJobTitle("");
+    setPositionId("");
     setDepartment("");
     setHireDate(todayIso());
     setSalary("1000");
@@ -110,8 +109,12 @@ export function EmployeeCreateDialog({
 
   const selectedDepartment = departments.find((d) => d.name === department);
   const deptPositions = selectedDepartment
-    ? positionsForDepartment(selectedDepartment.id)
+    ? orderedDepartmentPositions(positions, selectedDepartment.id)
     : [];
+  const selectedPosition = positions.find((p) => p.id === positionId) ?? null;
+  const reportsToLabel = selectedPosition
+    ? positionReportsLabel(positions, selectedPosition.id, lang)
+    : "";
   const departmentList = departments.length
     ? departments.map((d) => d.name)
     : MOCK_DEPARTMENTS.map((d) => d.name);
@@ -157,11 +160,13 @@ export function EmployeeCreateDialog({
 
     setSaving(true);
 
-    const finalJobTitle =
-      jobTitle === "__custom__" ? customJobTitle.trim() : jobTitle.trim();
-    if (!finalJobTitle) {
+    if (!selectedPosition || !positionId) {
       setSaving(false);
-      toast.error(lang === "ar" ? "المسمى الوظيفي مطلوب" : "Job title required");
+      toast.error(
+        lang === "ar"
+          ? "اختر منصب من الهيكل التنظيمي — كل موظف لازم يكون فرع بالهرم"
+          : "Pick a position from org structure — every employee must sit on the hierarchy",
+      );
       return;
     }
 
@@ -170,8 +175,9 @@ export function EmployeeCreateDialog({
       username,
       code,
       email,
-      job_title: finalJobTitle,
+      job_title: selectedPosition.name,
       department,
+      positionId,
       phone,
       hire_date: hireDate,
       salary: Number(salary),
@@ -380,7 +386,12 @@ export function EmployeeCreateDialog({
             </div>
           </Section>
 
-          <Section title={lang === "ar" ? "2) بيانات العمل" : "2) Job details"}>
+          <Section title={lang === "ar" ? "2) الموقع بالهرم الوظيفي" : "2) Place in hierarchy"}>
+            <p className="mb-3 rounded-xl border border-primary/20 bg-primary/5 px-3 py-2 text-xs text-muted-foreground">
+              {lang === "ar"
+                ? "القسم والمنصب من الهيكل التنظيمي. مثال: التقنية → المدير التقني → تيم ليد → مطور. الموظف يظهر تحت المنصب اللي تختاره."
+                : "Department and position come from Org structure. Example: Tech → CTO → Team lead → Developer. The employee appears under the position you pick."}
+            </p>
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label={`${t("emp.department")} *`}>
                 <select
@@ -389,8 +400,7 @@ export function EmployeeCreateDialog({
                   required
                   onChange={(e) => {
                     setDepartment(e.target.value);
-                    setJobTitle("");
-                    setCustomJobTitle("");
+                    setPositionId("");
                   }}
                 >
                   <option value="">{lang === "ar" ? "— اختر القسم —" : "— Choose department —"}</option>
@@ -401,38 +411,47 @@ export function EmployeeCreateDialog({
                   ))}
                 </select>
               </Field>
-              <Field label={`${t("emp.jobTitle")} *`}>
-                {deptPositions.length > 0 ? (
-                  <select
-                    className={selectClass}
-                    value={jobTitle}
-                    required
-                    onChange={(e) => {
-                      setJobTitle(e.target.value);
-                      if (e.target.value !== "__custom__") setCustomJobTitle("");
-                    }}
-                  >
-                    <option value="">{lang === "ar" ? "— اختر المنصب —" : "— Choose position —"}</option>
-                    {deptPositions.map((p) => (
-                      <option key={p.id} value={p.name}>
+              <Field label={`${lang === "ar" ? "المنصب في الهرم" : "Hierarchy position"} *`}>
+                <select
+                  className={selectClass}
+                  value={positionId}
+                  required
+                  disabled={!selectedDepartment}
+                  onChange={(e) => setPositionId(e.target.value)}
+                >
+                  <option value="">
+                    {!selectedDepartment
+                      ? lang === "ar"
+                        ? "— اختر القسم أولاً —"
+                        : "— Pick department first —"
+                      : deptPositions.length === 0
+                        ? lang === "ar"
+                          ? "— لا مناصب — عرّفها بالهيكل —"
+                          : "— No positions — define in Org structure —"
+                        : lang === "ar"
+                          ? "— اختر المنصب —"
+                          : "— Choose position —"}
+                  </option>
+                  {deptPositions.map((p) => {
+                    const boss = positionReportsLabel(positions, p.id, lang);
+                    return (
+                      <option key={p.id} value={p.id}>
                         {p.name}
+                        {boss && boss !== p.name ? ` ← ${boss}` : ""}
                       </option>
-                    ))}
-                    <option value="__custom__">{lang === "ar" ? "أخرى (كتابة يدوية)" : "Other (custom)"}</option>
-                  </select>
-                ) : (
-                  <Input value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required />
-                )}
+                    );
+                  })}
+                </select>
               </Field>
-              {jobTitle === "__custom__" ? (
-                <Field label={lang === "ar" ? "اكتب المنصب" : "Custom position"} className="sm:col-span-2">
-                  <Input
-                    value={customJobTitle}
-                    onChange={(e) => setCustomJobTitle(e.target.value)}
-                    required
-                    placeholder={lang === "ar" ? "المسمى الوظيفي" : "Job title"}
-                  />
-                </Field>
+              {selectedPosition ? (
+                <div className="sm:col-span-2 rounded-xl border border-border bg-secondary/40 px-3 py-2.5 text-xs">
+                  <p className="font-semibold text-foreground">
+                    {lang === "ar" ? "المسمى:" : "Title:"} {selectedPosition.name}
+                  </p>
+                  <p className="mt-1 text-muted-foreground">
+                    {lang === "ar" ? "يتبع:" : "Reports to:"} {reportsToLabel}
+                  </p>
+                </div>
               ) : null}
               <Field label={lang === "ar" ? "رول جاهز من الهيكل (اختياري)" : "Org role template (optional)"} className="sm:col-span-2">
                 <select
